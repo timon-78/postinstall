@@ -37,16 +37,20 @@ fi
 
 #========================= Information systeme ===============================
 DISTRIB=$(cat /etc/*-release | grep PRETTY_NAME | cut -d= -f2)
+echo "Distribution : ${VERT}$DISTRIB${RESETCOLOR}"
 
 case $DISTRIB in 
 	"\"Debian GNU/Linux 7 (wheezy)\"") 
-		echo "Debian 7 (wheezy) found"
 		wget https://raw.github.com/timon-78/postinstall/master/debian/7/postinstall.sh;;
 	"\"Debian GNU/Linux 6 (lenny)\"") 
-		echo "Debian 6 (lenny) found"
 		wget https://raw.github.com/timon-78/postinstall/master/debian/6/postinstall.sh ;;
 esac
 
-chmod +x postinstall.sh
-./postinstall.sh
+if [ ! -e "postinstall.sh" ]; then
+	echo "postinstall.sh n'existe pas"
+	exit 1
+elif [ -f "postinstall.sh" ]; then
+	chmod +x postinstall.sh
+	./postinstall.sh
+
 # Fin du script
