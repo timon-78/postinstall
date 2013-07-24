@@ -74,6 +74,24 @@ read ISOK
 
 echo "${BLEU}##### Configuration de base #####${RESETCOLOR}"
 
+# Change Hostname
+if [ ${#NEWHOSTNAME} -eq 0 ]; 
+then
+	echo " - Mise a jour hostname : ${VERT}[NO]${RESETCOLOR}"
+else	
+	hostname "$NEWHOSTNAME"
+	echo "$NEWHOSTNAME" > /etc/hostname
+
+	# Change Hosts
+	cat /etc/hosts | sed s/"$HOSTNAME"/"$NEWHOSTNAME"/g > /tmp/newhosts
+	mv /tmp/newhosts /etc/hosts
+	echo " - Mise a jour hostname : ${VERT}[OK]${RESETCOLOR}"
+fi        
+
+# Regeneration SSHKey
+/bin/rm /etc/ssh/ssh_host_*
+dpkg-reconfigure openssh-server
+echo " - Generation clefs SSH : ${VERT}[OK]${RESETCOLOR}"
 # Update 
 apt-get update >> $OUTPUT
 echo " - Mise a jour des depots : ${VERT}[OK]${RESETCOLOR}"
@@ -83,7 +101,6 @@ apt-get -y upgrade >> $OUTPUT
 echo " - Mise a jour du systeme : ${VERT}[OK]${RESETCOLOR}"
 
 # Configuration systeme
-echo " - Mise a jour hostname : ${VERT}[OK]${RESETCOLOR}"
 # hostname
 echo " - Mise a jour ip : ${VERT}[OK]${RESETCOLOR}"
 
