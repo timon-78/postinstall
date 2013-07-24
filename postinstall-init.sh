@@ -41,10 +41,10 @@ DISTRIB=$(cat /etc/*-release | grep PRETTY_NAME | cut -d= -f2)
 case $DISTRIB in 
 	"\"Debian GNU/Linux 7 (wheezy)\"") 
 		echo "Debian 7 (wheezy) found"
-		(wget https://github.com/timon-78/postinstall/blob/master/debian/7/postinstall.sh) >/dev/null 2>&1;;
+		(wget https://raw.github.com/timon-78/postinstall/blob/master/debian/7/postinstall.sh) >/dev/null 2>&1;;
 	"\"Debian GNU/Linux 6 (lenny)\"") 
 		echo "Debian 6 (lenny) found"
-		wget https://github.com/timon-78/postinstall/blob/master/debian/6/postinstall.sh >/dev/null 2>&1 ;;
+		wget https://raw.github.com/timon-78/postinstall/blob/master/debian/6/postinstall.sh >/dev/null 2>&1 ;;
 esac
 
 chmod +x postinstall.sh
