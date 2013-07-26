@@ -1,4 +1,5 @@
 #!/bin/bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
 sed -e 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config > /tmp/sshd_config.1
 

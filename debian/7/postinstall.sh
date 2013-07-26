@@ -6,12 +6,14 @@
 #
 # Syntaxe: # su - -c "./squeezeserverpostinstall.sh"
 # Syntaxe: or # sudo ./squeezeserverpostinstall.sh
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
 VERSION="0.0.1"
 
 #========================= Parametrage =======================================
-# Liste des applications à installer: A adapter a vos besoins
+# Liste des applications Ã  installer: A adapter a vos besoins
 LISTE="ca-certificates cron-apt fail2ban logwatch lsb-release nano snmpd htop iftop ntp"
-# Liste des applications à supprimer: A adapter a vos besoins
+# Liste des applications Ã  supprimer: A adapter a vos besoins
 RLISTE="isc-dhcp-common tasksel tasksel-data dmidecode laptop-detect nfs-common ispell"
 # sortie du programmes (par defaut /dev/null)
 OUTPUT="postinstall.log"
@@ -20,11 +22,11 @@ OUTPUT="postinstall.log"
 #========================= Variables de mise en forme ========================
 #+ Mode normal
 RESETCOLOR="$(tput sgr0)"
-# "Surligné" (bold)
+# "SurlignÃ©" (bold)
 SURLIGNE=$(tput bold)
-# "Non-Surligné" (offbold)
+# "Non-SurlignÃ©" (offbold)
 NONSURLIGNE=$(tput rmso)
-# "Sous-ligné"
+# "Sous-lignÃ©"
 $UNDERLIGNE=$(tput sgr 0 1)    
 
  
@@ -46,7 +48,7 @@ CYAN="$(tput setaf 6)"
 
 # Test que le script est lance en root
 if [ $EUID -ne 0 ]; then
-  echo "Le script doit être lancé en root: # sudo $0" 1>&2
+  echo "Le script doit Ãªtre lancÃ© en root: # sudo $0" 1>&2
   exit 1
 fi
 

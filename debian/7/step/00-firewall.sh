@@ -1,9 +1,11 @@
+#!/bin/bash
 # Mon script de post installation serveur Debian 7.x - Firewall
 #
 # Timon - 07/2013
 # GPL
 #
 #+ Mode normal
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
 RESETCOLOR="$(tput sgr0)"
 #+ Vert
 VERT="$(tput setaf 2)"
@@ -251,6 +253,7 @@ fw_test () {
 case \"\$1\" in
 start|restart)
  fw_stop
+ echo \"[ \${VERT}ok\${RESETCOLOR} ] Firewall stopped\"
  fw_start 
  echo \"[ \${VERT}ok\${RESETCOLOR} ] Firewall started\"
  ;;

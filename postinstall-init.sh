@@ -6,6 +6,8 @@
 #
 # Syntaxe: # su - -c "./squeezeserverpostinstall.sh"
 # Syntaxe: or # sudo ./squeezeserverpostinstall.sh
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
 VERSION="0.0.1"
 
 #========================= Variables de mise en forme ========================
