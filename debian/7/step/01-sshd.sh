@@ -1,6 +1,8 @@
 #!/bin/bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
+aptitude install -y openssh-server > /dev/null
+
 sed -e 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config > /tmp/sshd_config.1
 
 sed -e 's/LoginGraceTime 120/LoginGraceTime 30/' /tmp/sshd_config.1 > /tmp/sshd_config.2

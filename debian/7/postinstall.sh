@@ -201,6 +201,7 @@ if [ "$ISOK" = "y" ];then
 	echo ""
 	echo "${SURLIGNE}${UNDERLIGNE}${BLEU}##### Configuration applications #####${RESETCOLOR}"
 	# bashrc
+	/tmp/02-bashrc.sh
 	echo "[ ${VERT}ok${RESETCOLOR} ] Configuration BASH";
 	# Configuration
 	#--------------
