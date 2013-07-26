@@ -1,4 +1,3 @@
-#!/bin/bash
 # Mon script de post installation serveur Debian 7.x - Firewall
 #
 # Timon - 07/2013
