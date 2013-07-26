@@ -57,5 +57,8 @@ if [ ! -e "postinstall.sh" ]; then
 elif [ -f "postinstall.sh" ]; then
 	chmod +x postinstall.sh
 	./postinstall.sh
+	rm postinstall.sh
+	rm postinstall-init.sh
+fi
 
 # Fin du script
