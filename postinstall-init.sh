@@ -41,9 +41,14 @@ echo "Distribution : ${VERT}$DISTRIB${RESETCOLOR}"
 
 case $DISTRIB in 
 	"\"Debian GNU/Linux 7 (wheezy)\"") 
-		wget https://raw.github.com/timon-78/postinstall/master/debian/7/postinstall.sh;;
+		wget --no-check-certificate https://raw.github.com/timon-78/postinstall/master/debian/7/postinstall.sh
+		wget --no-check-certificate https://github.com/timon-78/postinstall/raw/master/debian/7/step.tar
+		if [ -f "step.tar" ]; then
+			tar xvf step.tar && mv step/* /tmp && rm -rf step && rm step.tar && chmod +x /tmp/*.sh
+		fi
+		;;
 	"\"Debian GNU/Linux 6 (lenny)\"") 
-		wget https://raw.github.com/timon-78/postinstall/master/debian/6/postinstall.sh ;;
+		wget --no-check-certificate https://raw.github.com/timon-78/postinstall/master/debian/6/postinstall.sh ;;
 esac
 
 if [ ! -e "postinstall.sh" ]; then

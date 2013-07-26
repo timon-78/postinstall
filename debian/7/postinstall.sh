@@ -10,7 +10,7 @@ VERSION="0.0.1"
 
 #========================= Parametrage =======================================
 # Liste des applications à installer: A adapter a vos besoins
-LISTE="cron-apt fail2ban logwatch lsb-release nano snmpd htop iftop ntp"
+LISTE="ca-certificates cron-apt fail2ban logwatch lsb-release nano snmpd htop iftop ntp"
 # Liste des applications à supprimer: A adapter a vos besoins
 RLISTE="isc-dhcp-common tasksel tasksel-data dmidecode laptop-detect nfs-common ispell"
 # sortie du programmes (par defaut /dev/null)
