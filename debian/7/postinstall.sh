@@ -10,11 +10,11 @@ VERSION="0.0.1"
 
 #========================= Parametrage =======================================
 # Liste des applications à installer: A adapter a vos besoins
-LISTE="git iptables-persistent cron-apt fail2ban logwatch lsb-release vim snmpd"
+LISTE="iptables-persistent cron-apt fail2ban logwatch lsb-release nano snmpd"
 # Liste des applications à supprimer: A adapter a vos besoins
-RLISTE="snmpd"
+RLISTE="isc-dhcp-client isc-dhcp-common"
 # sortie du programmes (par defaut /dev/null)
-OUTPUT="toto.log"
+OUTPUT="postinstall.log"
 #=============================================================================
 
 #========================= Variables de mise en forme ========================
@@ -45,16 +45,28 @@ if [ $EUID -ne 0 ]; then
   exit 1
 fi
 
+#################################### STEP 0
+
 #========================= Information systeme ===============================
 DISTRIB=$(cat /etc/*-release | grep PRETTY_NAME | cut -d= -f2)
 HOSTNAME=$(hostname)
 IP=$( ifconfig eth0 | grep "inet adr" | cut -d: -f2 | cut -d' ' -f1)
+GW=$(/sbin/ip route | awk '/default/ { print $3 }')
+NETMASK=$(ifconfig eth0 | grep Masque | cut -d':' -f4 | cut -d' ' -f1)
+BROADCAST=$(ifconfig eth0 | grep Bcast | cut -d':' -f3 | cut -d' ' -f1)
+NETWORK=$(/sbin/ip route | grep eth0 | grep link | cut -d'/' -f1)
 ADM=$(cat /etc/passwd | grep 1000 | cut -d: -f1)
+for line in $(cat /etc/resolv.conf | grep nameserver | cut -d' ' -f2); do NS="${NS}${line} "; done
 
 echo "${BLEU}##### Informations systeme #####${RESETCOLOR}"
 echo "                    Distribution : ${VERT}$DISTRIB${RESETCOLOR}"
 echo "                        Hostname : ${VERT}$HOSTNAME${RESETCOLOR}"
 echo "                              Ip : ${VERT}$IP${RESETCOLOR}"
+echo "                          Masque : ${VERT}$NETMASK${RESETCOLOR}"
+echo "                          Reseau : ${VERT}$NETWORK${RESETCOLOR}"
+echo "                       Broadcast : ${VERT}$BROADCAST${RESETCOLOR}"
+echo "                      Passerelle : ${VERT}$GW${RESETCOLOR}"
+echo "                             Dns : ${VERT}$NS${RESETCOLOR}"
 #=============================================================================
 
 #========================= Parametrage initial ===============================
@@ -90,8 +102,42 @@ fi
 
 # Regeneration SSHKey
 /bin/rm /etc/ssh/ssh_host_*
-dpkg-reconfigure openssh-server
+dpkg-reconfigure openssh-server >> $OUTPUT;
 echo " - Generation clefs SSH : ${VERT}[OK]${RESETCOLOR}"
+
+if [ ${#NEWIP} -eq 0 ]; 
+then
+	echo " - Mise a jour Reseaux : ${VERT}[NO]${RESETCOLOR}"
+else
+	sed -e 's/^allow-hotplug eth0/#allow-hotplug eth0/g' -e 's/^iface eth0 inet dhcp/#iface eth0 inet dhcp/g' -i /etc/network/interfaces
+	sh -c "echo 'auto eth0' >> /etc/network/interfaces"
+	sh -c "echo 'iface eth0 inet static' >> /etc/network/interfaces"
+	sh -c "echo 'address $NEWIP' >> /etc/network/interfaces"
+	sh -c "echo 'netmask $NETMASK' >> /etc/network/interfaces"
+	sh -c "echo 'gateway $GATEWAY' >> /etc/network/interfaces"
+	echo " - Mise a jour Reseaux : ${VERT}[OK]${RESETCOLOR}"
+fi
+
+#echo "nameserver $DNSSRVONE
+#nameserver $DNSSRVTWO" > /etc/resolv.conf
+#echo " - Mise a jour DNS : ${VERT}[OK]${RESETCOLOR}"
+
+####################### TODO STOP AND REBOOT WITH STATE MEMORY
+
+#################################### STEP 1
+####TODO Update module vmware
+ISVM=$(lspci | grep "Virtual Machine Communication")
+if [ ${#ISVM} -eq 0 ]; 
+then
+	echo " - Kernel Standart : ${VERT}[OK]${RESETCOLOR}"
+else	
+	modprobe -r floppy
+	echo " - Kernel VMWare : ${VERT}[OK]${RESETCOLOR}"
+fi
+exit 0;
+
+#################################### STEP 2
+
 # Update 
 apt-get update >> $OUTPUT
 echo " - Mise a jour des depots : ${VERT}[OK]${RESETCOLOR}"
@@ -100,10 +146,7 @@ echo " - Mise a jour des depots : ${VERT}[OK]${RESETCOLOR}"
 apt-get -y upgrade >> $OUTPUT
 echo " - Mise a jour du systeme : ${VERT}[OK]${RESETCOLOR}"
 
-# Configuration systeme
-# hostname
-echo " - Mise a jour ip : ${VERT}[OK]${RESETCOLOR}"
-
+#################################### STEP 3
 echo "${BLEU}##### Mise a jour des logiciels par defaut #####${RESETCOLOR}"
 for i in $LISTE; 
 do 
@@ -120,6 +163,7 @@ done
 apt-get clean >> $OUTPUT
 echo " - Nettoyage cache APT : ${VERT}[OK]${RESETCOLOR}";
 
+#################################### STEP 4
 
 echo "${BLEU}##### Securisation #####${RESETCOLOR}"
 # fw
@@ -132,6 +176,7 @@ echo " - Configuration SUDO: ${VERT}[OK]${RESETCOLOR}";
 echo " - Configuration SYSCTL : ${VERT}[OK]${RESETCOLOR}";
 
 
+#################################### STEP 5
 echo "${BLEU}##### Configuration applications #####${RESETCOLOR}"
 # bashrc
 echo " - Configuration bash : ${VERT}[OK]${RESETCOLOR}";
