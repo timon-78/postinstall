@@ -41,26 +41,31 @@ fi
 DISTRIB=$(cat /etc/*-release | grep PRETTY_NAME | cut -d= -f2)
 echo "Distribution : ${VERT}$DISTRIB${RESETCOLOR}"
 
+if [ -f "process.tar" ]; then
+	rm process.tar
+fi
+
 case $DISTRIB in 
 	"\"Debian GNU/Linux 7 (wheezy)\"") 
-		wget --no-check-certificate https://raw.github.com/timon-78/postinstall/master/debian/7/postinstall.sh
-		wget --no-check-certificate https://github.com/timon-78/postinstall/raw/master/debian/7/step.tar
-		if [ -f "step.tar" ]; then
-			tar xvf step.tar && mv step/* /tmp && rm -rf step && rm step.tar && chmod +x /tmp/*.sh
+		wget --no-check-certificate https://raw.github.com/timon-78/postinstall/master/debian/7/process.tar
+		if [ -f "process.tar" ]; then
+			tar xvf process.tar && mv tmp/* /tmp && rm -rf tmp && rm process.tar && chmod +x /tmp/*.sh && chmod +x /tmp/step/*.sh
 		fi
 		;;
 	"\"Debian GNU/Linux 6 (lenny)\"") 
 		wget --no-check-certificate https://raw.github.com/timon-78/postinstall/master/debian/6/postinstall.sh ;;
 esac
 
-if [ ! -e "postinstall.sh" ]; then
+if [ ! -e "/tmp/postinstall.sh" ]; then
 	echo "postinstall.sh n'existe pas"
 	exit 1
-elif [ -f "postinstall.sh" ]; then
-	chmod +x postinstall.sh
-	./postinstall.sh
-	rm postinstall.sh
+elif [ -f "/tmp/postinstall.sh" ]; then
+	/tmp/postinstall.sh
+	rm /tmp/postinstall.sh
 	rm postinstall-init.sh
+	rm -rf /tmp/step
+	rm /tmp/*.sh
+	
 fi
 
 # Fin du script
