@@ -134,11 +134,11 @@ ROUGE=\"\$(tput setaf 1)\"
 fw_start () {
 	# ---
 
-	/etc/firewall/log
+	/etc/firewall/rules
 
 	# ---
 
-	/etc/firewall/rules
+	/etc/firewall/log
 
 	# ---
 
@@ -212,22 +212,22 @@ fw_restore () {
 }
  
 fw_test () {
-	if [ \${#2} -eq 0 ]; 
+	if [ \${#1} -eq 0 ]; 
 	then
 		echo \"[ \${ROUGE}ko\${RESETCOLOR} ] Config file not specified\"
 		exit 1
 	else		
 
-		if ! [ -x \$2 ]; then
+		if ! [ -x \$1 ]; then
 		 echo \"[ \${ROUGE}ko\${RESETCOLOR} ] Config file not found\"
 		 echo \"file not found\"
 		 exit 1
 		fi
 
 		fw_save
-		fw_stop		
+		fw_stop
+		\$1
 		/etc/firewall/log
-		\$2
 		echo \"[ \${VERT}ok\${RESETCOLOR} ] Test rules applied\"
 		sleep 30 && fw_restore
 		fw_stop
@@ -252,7 +252,7 @@ clear)
  echo \"[ \${VERT}ok\${RESETCOLOR} ] Firewall cleared\"
  ;;
 test)
- fw_test
+ fw_test $2
  ;;
 *)
  echo \"Usage: $0 {start|stop|restart|clear|test}\"
