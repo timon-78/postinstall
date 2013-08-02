@@ -12,7 +12,7 @@ BLEU="$(tput setaf 4)"
 
 echo "${BLEU}########## Installation backup-manager ##########${RESETCOLOR}"
 
-aptitude -y install backup-manager bzip2 > /dev/null
+aptitude -y install backup-manager bzip2 iotop > /dev/null
 if [ $? -eq 0 ]; then
 	echo "[ ${VERT}ok${RESETCOLOR} ] Installation backup-manager"
 else
@@ -20,7 +20,7 @@ else
 	exit 1
 fi
 
-# Configuration duree de vie des archives de 5 jours Ã  90 jours
+# Configuration duree de vie des archives de 5 jours à 90 jours
 sed -i 's/export BM_ARCHIVE_TTL="5"/export BM_ARCHIVE_TTL="90"/g' /etc/backup-manager.conf
 if [ $? -eq 0 ]; then
 	echo "[ ${VERT}ok${RESETCOLOR} ] Configuration backup-manager - TTL"
